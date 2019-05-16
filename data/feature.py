@@ -69,13 +69,6 @@ class Extractor:
                 feat[self.apk2index[apk]][self.api2index[api]] = 1
         feat = sparse.csr_matrix(feat)
         self.feat = feat
-        
-    def get_mask(self, matrix):
-        # mask[i]=True 表示第i个apk有效
-        # mask[i]=False 表示第i个apk无效，无效指的是该apk的所有特征维度都为空
-        tmp = np.array(np.sum(matrix, axis=1)).squeeze()
-        mask = np.array(list(map(lambda x: True if x>0 else False, tmp)))
-        return  mask
     
     def run(self):
         self.feature_matrix()

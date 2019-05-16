@@ -23,6 +23,7 @@ class Extractor:
         return APIs
 
     def analysis_smali(self, smali_path):
+        all_apis = set()
         for a, _, c in os.walk(smali_path):
             for file in c:
                 single_smali_file = os.path.join(a,file)
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     path_decompiled = '/home/security/data/decompiled/{}'.format(tag)
     apks_path = "/home/security/data/{}_apks".format(tag) # 遍历时用到最原始的apk目录，没有实际作用。因为反编译和提取第三方库都存在解析失败的APK,所以只有原始apk文件中的是全集
     
-    out_path = "./reports/{}".format(tag)
+    out_path = "/home/security/target_mlp/data/reports/{}".format(tag)
 
     E = Extractor(path_decompiled, api_dict)
  
