@@ -15,9 +15,9 @@ def reduce_dim(feats, labels, dim,  save_selector):
     selector = SelectKBest(chi2, k=dim)
     matrix = selector.fit_transform(feats, labels)
 
-    # 保存降维器，给单个apk降维时还会用到
-    with open(save_selector, 'wb') as f:
-         pkl.dump(selector, f)
+    mask = selector.get_support()
+    with open('chi2_mask.pkl', 'wb') as f:
+         pkl.dump(mask, f)
 
     return matrix
 
@@ -60,3 +60,10 @@ if __name__ == '__main__':
      save_selector = '/home/security/target_mlp/data/chi2_selector.pkl'
      train_x, train_y, test_x, test_y = getData(report_path, api_dict, save_selector)
      print(train_x.shape, train_y.shape, test_x.shape, test_y.shape)
+     data = dict()
+     data['train_x'] = train_x
+     data['train_y'] = train_y
+     data['test_x'] = test_x
+     data['test_y'] = test_y
+     with open('data_set.pkl', 'wb') as f:
+          pkl.dump(data, f)

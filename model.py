@@ -48,7 +48,7 @@ hist = model.fit(train_data,
                  batch_size=batchsize,
                  epochs=epochs)
 print('Training duration: %d(s).' % (time.time()-start_time))
-model.save("target_model")
+model.save("target_model.keras")
 
 
 def plot_train(history):

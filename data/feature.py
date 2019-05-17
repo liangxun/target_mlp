@@ -24,6 +24,10 @@ def build_api2index(api_dict):
     api2index = dict()
     for i, j in enumerate(APIs):
         api2index[j] = i
+    
+    with open('api2index.pkl', 'wb') as f:
+        pkl.dump(api2index, f)
+
     return api2index
 
 

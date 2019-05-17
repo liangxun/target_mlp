@@ -7,25 +7,28 @@ from keras.models import load_model
 import numpy as np
 import pickle as pkl
 from data.extract import Extractor
+import json
 from data.feature import build_api2index
 
 
-path_decompiled = '/home/security/data/decompiled'
-api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
-chi2_path = "/home/security/target_mlp/data/chi2_selector"
-model_path = '/home/security/target_mlp/data/target_model'
+report_path = './data/reports'
+api_dict = './data/api2index.pkl'
+mask_path = './data/chi2_mask.pkl'
+model_path = 'target_model.keras'
 
-api2index = build_api2index(api_dict)
-with open(chi2_path, 'rb') as f:
-    chi2 = pkl.load(f)
+with open(mask_path, 'rb') as f:
+    chi2_mask = pkl.load(f)
+with open(api_dict, 'rb') as f:
+    api2index = pkl.load(f)
 model = load_model(model_path)
 
 
 def get_sample(tag, apk):    
     # 提取apis
-    path = os.path.join(path_decompiled, tag)
-    E = Extractor(path, api_dict)
-    apis = E.extract(apk)
+    path = os.path.join(report_path, tag)
+    file = os.path.join(path, apk)
+    with(open(file, 'r')) as f:
+        apis = json.load(f)
 
     # 将apis调用转换成向量
     feat = np.zeros(len(api2index))
@@ -33,7 +36,7 @@ def get_sample(tag, apk):
         feat[api2index[api]] = 1
     
     # 降维
-    feat = chi2.transform(feat)
+    feat = feat[chi2_mask]
 
     # 获取标签
     if tag == 'malware':
@@ -48,7 +51,8 @@ def get_sample(tag, apk):
 
 def run(tag, apk):
     x, y_true = get_sample(tag, apk)
-    y_pred = model.predict(x)
+    print(x.shape)
+    y_pred = model.predict(x[np.newaxis, :])
     y_pred = np.argmax(y_pred.squeeze())
     return y_true, y_pred
 
