@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.utils import to_categorical
 from data.input_data import getData
 from metrics import Metrics
+import pickle as pkl
 
 # =================== configure =========================
 epochs = 10
@@ -13,15 +14,17 @@ lr = 0.05
 dropout_r = 0.1
 
 # ===================load data========================
-report_path = "/home/security/target_mlp/data/reports"
-api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
-save_selector = '/home/security/target_mlp/data/chi2_selector.pkl'
-train_data, train_label, test_data, test_label = getData(report_path, api_dict, save_selector)
+data_path = "./data/data_set.pkl"
+with open(data_path, 'rb') as f:
+    data = pkl.load(f)
+train_data = data['train_x']
+train_label=data['train_y']
+test_data = data['test_x']
+test_label = data['test_y']
 train_label = to_categorical(train_label)
 
 # ================== define model ================================
 def bpnn(input_dim, layers_out, lr=0.001, dropout=0.5):
-    model_name = 'bpnn'
     model = Sequential()
     model.add(Dense(layers_out[0], activation='relu', input_dim=input_dim))
     model.add(Dropout(dropout))
