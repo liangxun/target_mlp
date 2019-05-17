@@ -57,13 +57,12 @@ class Extractor:
 
         cnt = 1
         for apk in self.apk2index.keys():
-            # print(cnt, apk)
+            print(cnt, apk)
             cnt += 1
 
             file = os.path.join(self.report_path, apk)
             with(open(file, 'r')) as f:
-                report = json.load(f)
-            apis = report['sensitive_api']
+                apis = json.load(f)
             for api in apis:
                 # feat[self.apk2index[apk]][self.api2index[api]] += 1    # 统计调用频次
                 feat[self.apk2index[apk]][self.api2index[api]] = 1
@@ -84,10 +83,10 @@ def get_design_matrix(reports, api_dict):
     E = Extractor(os.path.join(reports, 'normal'), api_dict)
     normal = E.run()
 
-    apk_api = vstack((malware['feature_matrix'], normal['feature_matrix']))
+    apk_api = vstack((malware, normal))
 
-    num_malware = malware['feature_matrix'].shape[0]
-    num_normal = normal['feature_matrix'].shape[0]
+    num_malware = malware.shape[0]
+    num_normal = normal.shape[0]
     labels = np.array([1]*num_malware + [0]*num_normal) # 1: malware; 0: bengin/normal
     print("total {} apks in dataset. \n\tnum_malware={}\n\tnum_normal={}".format(len(labels), num_malware, num_normal))
     
@@ -95,7 +94,7 @@ def get_design_matrix(reports, api_dict):
 
 
 if __name__ == '__main__':
-    report_path = "/home/security/data/reports"
+    report_path = "/home/security/target_mlp/data/reports"
     api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
     a, b = get_design_matrix(report_path, api_dict)
     print(a.shape, len(b))

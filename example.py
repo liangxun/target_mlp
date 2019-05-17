@@ -13,10 +13,12 @@ from data.feature import build_api2index
 path_decompiled = '/home/security/data/decompiled'
 api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
 chi2_path = "/home/security/target_mlp/data/chi2_selector"
+model_path = '/home/security/target_mlp/data/target_model'
 
 api2index = build_api2index(api_dict)
 with open(chi2_path, 'rb') as f:
     chi2 = pkl.load(f)
+model = load_model(model_path)
 
 
 def get_sample(tag, apk):    
@@ -46,10 +48,8 @@ def get_sample(tag, apk):
 
 def run(tag, apk):
     x, y_true = get_sample(tag, apk)
-    model = load_model('target_model')
     y_pred = model.predict(x)
     y_pred = np.argmax(y_pred.squeeze())
-    print('y_true={}\ty_pred={}.'.format(y_true, y_pred))
     return y_true, y_pred
 
 
@@ -59,4 +59,6 @@ if __name__ == '__main__':
     tag = sys.argv[1] # tag = 'malware' or 'normal'
     apk = sys.argv[2]
 
-    run(tag, apk)
+    y_true, y_pred = run(tag, apk)
+    print("apk: {}".format(apk))
+    print('y_true={}\ty_pred={}.'.format(y_true, y_pred))

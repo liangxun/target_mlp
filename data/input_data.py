@@ -16,7 +16,7 @@ def reduce_dim(feats, labels, dim,  save_selector):
     matrix = selector.fit_transform(feats, labels)
 
     # 保存降维器，给单个apk降维时还会用到
-    with open(save_selector, 'rb') as f:
+    with open(save_selector, 'wb') as f:
          pkl.dump(selector, f)
 
     return matrix
@@ -55,8 +55,8 @@ def getData(report_path, api_dict, save_selector):
 
 
 if __name__ == '__main__':
-     report_path = "/home/security/data/reports"
+     report_path = "/home/security/target_mlp/data/reports"
      api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
-     save_selector = './chi2_selector.pkl'
+     save_selector = '/home/security/target_mlp/data/chi2_selector.pkl'
      train_x, train_y, test_x, test_y = getData(report_path, api_dict, save_selector)
      print(train_x.shape, train_y.shape, test_x.shape, test_y.shape)

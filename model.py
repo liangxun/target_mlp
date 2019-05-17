@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
 from keras.utils import to_categorical
-from input_data import getData
+from data.input_data import getData
 from metrics import Metrics
 
 # =================== configure =========================
@@ -13,9 +13,11 @@ lr = 0.05
 dropout_r = 0.1
 
 # ===================load data========================
-train_data, train_label, test_data, test_label = getData()
+report_path = "/home/security/target_mlp/data/reports"
+api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
+save_selector = '/home/security/target_mlp/data/chi2_selector.pkl'
+train_data, train_label, test_data, test_label = getData(report_path, api_dict, save_selector)
 train_label = to_categorical(train_label)
-# test_label = to_categorical(test_label)
 
 # ================== define model ================================
 def bpnn(input_dim, layers_out, lr=0.001, dropout=0.5):
@@ -32,7 +34,7 @@ def bpnn(input_dim, layers_out, lr=0.001, dropout=0.5):
     return model
 
 input_dim = train_data.shape[1]
-layers_out = [200, 100, 2]
+layers_out = [256, 128, 2]
 model = bpnn(input_dim, layers_out, lr=lr, dropout=dropout_r)
 print(model.summary())
 

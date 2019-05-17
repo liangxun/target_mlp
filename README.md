@@ -6,3 +6,9 @@
 
 ## 任务
 推测特征中使用的是哪2000个api？
+
+## 测试单个APK
+run:
+``` 
+python3 example.py malware ff9421ecebce5662b8ca8d1c11547032.apk
+```
