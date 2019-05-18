@@ -8,7 +8,7 @@ from feature import get_design_matrix
 from sklearn.feature_selection import SelectKBest, chi2
 
 
-def reduce_dim(feats, labels, dim,  save_selector):
+def reduce_dim(feats, labels, dim):
     """
     使用卡方检验给属性降维度
     """
@@ -22,16 +22,15 @@ def reduce_dim(feats, labels, dim,  save_selector):
     return matrix
 
 
-def getData(report_path, api_dict, save_selector):
+def getData(report_path, api_dict):
     """
     feats: 设计矩阵，每个样本表示为2000维的向量
     labels: 1表示malware, 2表示normal
-    selector: 卡方检验降维度器
     train:test = xx : 2000    2000个测试样本，其余都是训练样本
     """
     feats, labels = get_design_matrix(report_path, api_dict)
 
-    feats= reduce_dim(feats, labels, 2000, save_selector)
+    feats= reduce_dim(feats, labels, 2000)
 
     X = feats.toarray()
     y = labels[:, np.newaxis]
@@ -55,10 +54,10 @@ def getData(report_path, api_dict, save_selector):
 
 
 if __name__ == '__main__':
-     report_path = "/home/security/target_mlp/data/reports"
-     api_dict = '/home/security/Android/static/mapping_5.1.1.csv'
-     save_selector = '/home/security/target_mlp/data/chi2_selector.pkl'
-     train_x, train_y, test_x, test_y = getData(report_path, api_dict, save_selector)
+     report_path = "./reports"
+     api_dict = './mapping_5.1.1.csv'
+     
+     train_x, train_y, test_x, test_y = getData(report_path, api_dict)
      print(train_x.shape, train_y.shape, test_x.shape, test_y.shape)
      data = dict()
      data['train_x'] = train_x
